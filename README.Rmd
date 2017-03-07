@@ -182,5 +182,9 @@ library(ggplot2)
 library(ggrepel)
 library(cowplot)
 
-ggplot(cleaned_data, aes(x = time.point, y = value, color = factor(gene.name))) + geom_point(aes(shape = rep)) + geom_smooth(method = 'lm', se = FALSE) + facet_wrap(fungus~plant) + theme_bw() + ggtitle('The expression value of plant and fungus at different time points') 
+plot_data <- semi_join(cleaned_data, expr_diff, by = 'gene.name') %>%
+  mutate(time.value = str_replace(time.point, 'hpi', '')) %>%
+  mutate(time.value = as.integer(time.value))
+
+ggplot(plot_data, aes(x = time.value, y = value, color = factor(gene.name))) + geom_point(aes(shape = rep)) + geom_smooth(method = 'lm', se = FALSE) + facet_wrap(fungus~plant) + theme_bw() + ggtitle('The expression value of plant and fungus at different time points') 
 ```
